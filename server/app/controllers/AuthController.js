@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
     const { username, first_name, last_name, email, password, confirmed_password } = req.body;
@@ -23,5 +25,37 @@ exports.register = async (req, res) => {
         }
     } catch (error) {
         return res.status(500).json({message: "Some error occourred, please try again."})
+    }
+}
+
+exports.login = async (req, res) => {
+    const {email, password} = req.body;
+
+    try {
+        const user = await User.findOne({email});
+        if (!user) {
+            return res.status(403).json({errors: {message: "Invalid Email or Password"}});
+        }
+        const passMatch = await bcrypt.compare(password, user.password);
+        if (!passMatch) {
+            return res.status(403).json({errors: {message: "Invalid Email or Password"}});
+        }
+
+        req.user = user;
+        const token = jwt.sign(
+            {
+                _id: user._id, username: user.username, first_name: user.first_name, last_name: user.last_name, username: user.email, followers: user.followers, followings: user.followings
+            }, process.env.JWT_KEY)
+        user.password = undefined;
+        user.__v = undefined;
+        res.status(200).send({
+            user,
+            token_type: 'Bearer',
+            token
+        })
+    } catch (error) {
+        res.status(500).send({
+            message: 'Some error occourred, please try again.',
+        })
     }
 }

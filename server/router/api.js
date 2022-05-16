@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // controllers imports
-const { register } = require('../app/controllers/AuthController');
+const { register, login } = require('../app/controllers/AuthController');
 
 
 router.get('/', (req, res) => {
@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
 
 
 router.post('/register', register);
+router.post('/login', login);
 
 
 
