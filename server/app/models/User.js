@@ -37,15 +37,10 @@ const userSchema = mongoose.Schema({
             ref: 'User'
         }
     ],
-    created_at: {
-        type: Date,
-        default: Date.now
+    img: {
+        type: String
     },
-    updated_at: {
-        type: Date,
-        default: Date.now
-    }
-});
+}, {timestamps: true});
 
 userSchema.pre('save', async function (next){
     try {
