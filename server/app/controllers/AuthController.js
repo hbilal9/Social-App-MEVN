@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
         res.status(200).send({
             user,
             token_type: 'Bearer',
-            token
+            access_token: token
         })
     } catch (error) {
         res.status(500).send({

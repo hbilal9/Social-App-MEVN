@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-exports.checkAuth = (req, res, next) => {
+const checkAuth = (req, res, next) => {
     const {authorization} = req.headers;
     if(!authorization){
         return res.status(403).json('Unauthorized.')
@@ -20,3 +20,5 @@ exports.checkAuth = (req, res, next) => {
         })
     })
 }
+
+module.exports = checkAuth;
