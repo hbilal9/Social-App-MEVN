@@ -6,10 +6,14 @@ exports.register = async (req, res) => {
     const { username, first_name, last_name, email, password, confirmed_password } = req.body;
 
     try {
-        const exists = await User.findOne({email})
+        const emailExists = await User.findOne({email})
+        const usernameExists = await User.findOne({username})
     
-        if (exists) {
+        if (emailExists) {
             return res.status(422).json({error: 'Email already taken.'});
+        }
+        if (usernameExists) {
+            return res.status(422).json({error: 'username already taken.'});
         }
     
         if (password != confirmed_password) {
